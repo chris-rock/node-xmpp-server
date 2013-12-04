@@ -22,11 +22,7 @@ function startServer(mechanism) {
 
     if (mechanism) {
         // remove plain
-<<<<<<< HEAD
         c2s.availableSaslMechanisms = []
-=======
-        c2s.availableSaslMechanisms = [];
->>>>>>> ca218e7d82eab88bd38cf253f9347923fa783b49
         c2s.registerSaslMechanism(mechanism)
     }
 
