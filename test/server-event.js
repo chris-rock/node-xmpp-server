@@ -16,26 +16,26 @@ function startServer() {
         domain: 'localhost'
     })
 
-    c2s.on('error', function(err) {
+    c2s.on('error', function (err) {
         console.log('c2s error: ' + err.message)
     })
 
-    c2s.on('connect', function(client) {
+    c2s.on('connect', function (client) {
         c2s.on('register', function(opts, cb) {
             cb(new Error('register not supported'))
         })
 
         // allow anything
-        client.on('authenticate', function(opts, cb) {
+        client.on('authenticate', function (opts, cb) {
             eventChain.push('authenticate')
-            cb(null)
+            cb(null, opts)
         })
 
-        client.on('online', function() {
+        client.on('online', function () {
             eventChain.push('online')
         })
 
-        client.on('stanza', function() {
+        client.on('stanza', function () {
             eventChain.push('stanza')
             client.send(
                 new Message({ type: 'chat' })
@@ -44,40 +44,40 @@ function startServer() {
             )
         })
 
-        client.on('disconnect', function() {
+        client.on('disconnect', function () {
             eventChain.push('disconnect')
         })
 
-        client.on('end', function() {
+        client.on('end', function () {
             eventChain.push('end')
         })
 
-        client.on('close', function() {
+        client.on('close', function () {
             eventChain.push('close')
         })
 
-        client.on('error', function() {
+        client.on('error', function () {
             eventChain.push('error')
         })
     })
 }
 
-describe('C2Server', function() {
+describe('C2Server', function () {
 
     var cl = null
 
-    before(function(done) {
+    before(function (done) {
         startServer()
         done()
     })
 
-    after(function(done) {
+    after(function (done) {
         c2s.shutdown()
         done()
     })
 
-    describe('events', function() {
-        it('should be in the right order for connecting', function(done) {
+    describe('events', function () {
+        it('should be in the right order for connecting', function (done) {
             eventChain = []
 
             //clientCallback = done
@@ -86,20 +86,20 @@ describe('C2Server', function() {
                 password: 'alice',
                 host: 'localhost'
             })
-            cl.on('online', function() {
+            cl.on('online', function () {
                 eventChain.push('clientonline')
                 assert.deepEqual(eventChain, ['authenticate', 'online', 'clientonline'])
                 done()
             })
-            cl.on('error', function(e) {
+            cl.on('error', function (e) {
                 done(e)
             })
 
         })
-        it('should ping pong stanza', function(done) {
+        it('should ping pong stanza', function (done) {
             eventChain = []
 
-            cl.on('stanza', function() {
+            cl.on('stanza', function () {
                 eventChain.push('clientstanza')
                 assert.deepEqual(eventChain, ['stanza', 'clientstanza'])
                 done()
@@ -111,21 +111,21 @@ describe('C2Server', function() {
                     .t('Hello there, little server.')
             )
 
-            cl.on('error', function(e) {
+            cl.on('error', function (e) {
                 done(e)
             })
         })
 
-        it('should close the connection', function(done) {
+        it('should close the connection', function (done) {
             eventChain = []
 
             // end xmpp stream
-            cl.on('end', function() {
+            cl.on('end', function () {
                 eventChain.push('clientend')
             })
 
             // close socket
-            cl.on('close', function() {
+            cl.on('close', function () {
                 eventChain.push('clientclose')
                 assert.deepEqual(eventChain, ['end', 'close', 'clientend', 'clientclose'])
                 done()
