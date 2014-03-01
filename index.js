@@ -9,6 +9,9 @@ module.exports = {
     // BOSH
     BOSHServer: require('./lib/bosh/server'),
 
+    // Component
+    Component : require('./lib/component'),
+
     // SASL
     auth: {
         Plain: require('./lib/authentication/plain'),
