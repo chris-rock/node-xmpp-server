@@ -13,7 +13,11 @@
   "keywords": [
     "xmpp",
     "nodejs",
-    "server"
+    "server",
+    "component",
+    "xep-0144",
+    "xep-0220",
+    "rfc3920"
   ],
   "author": "Lloyd Watkin <lloyd@evilprofessor.co.uk>",
   "license": "MIT",
@@ -21,9 +25,9 @@
     "url": "https://github.com/node-xmpp/node-xmpp-server/issues"
   },
   "dependencies": {
-    "hat": "~0.0.3",
-    "ltx": "~0.3.2",
     "node-xmpp-core": "git+https://github.com/node-xmpp/node-xmpp-core.git",
+    "ltx": "~0.3.2",
+    "hat": "~0.0.3",
     "debug" :"~0.7.4"
   },
   "devDependencies": {
